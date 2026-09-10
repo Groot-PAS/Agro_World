@@ -4,8 +4,22 @@ import functools
 import numpy as np
 from tensorflow.keras.preprocessing.image import load_img
 from tensorflow.keras.models import load_model
+from tensorflow.keras.layers import DepthwiseConv2D
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
+
+# Older Keras versions saved a 'groups' key in DepthwiseConv2D's config that
+# newer Keras no longer accepts as a constructor argument, causing:
+# "TypeError: Unrecognized keyword arguments passed to DepthwiseConv2D:
+# {'groups': 1}" when loading .h5 models trained on an older TF/Keras
+# version (common with MobileNet-based models). This subclass just drops
+# that key before construction so the old model file loads correctly.
+class FixedDepthwiseConv2D(DepthwiseConv2D):
+    def __init__(self, **kwargs):
+        kwargs.pop('groups', None)
+        super().__init__(**kwargs)
+
 
 # maxsize=2 keeps at most 2 crop models in memory at once, evicting the
 # least-recently-used one when a 3rd different crop is requested. This
@@ -14,7 +28,11 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 # different crops in a row.
 @functools.lru_cache(maxsize=2)
 def get_model(path):
-    model = load_model(path, compile=False)
+    model = load_model(
+        path,
+        compile=False,
+        custom_objects={'DepthwiseConv2D': FixedDepthwiseConv2D}
+    )
     return model
 
 def img_predict(path, crop):
