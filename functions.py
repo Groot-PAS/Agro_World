@@ -1,11 +1,18 @@
 import os
 import pickle
+import functools
 import numpy as np
 from tensorflow.keras.preprocessing.image import load_img
 from tensorflow.keras.models import load_model
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
+# maxsize=2 keeps at most 2 crop models in memory at once, evicting the
+# least-recently-used one when a 3rd different crop is requested. This
+# avoids reloading a model on every request (fast) while capping memory
+# use so a low-RAM host doesn't run out of memory if visitors try many
+# different crops in a row.
+@functools.lru_cache(maxsize=2)
 def get_model(path):
     model = load_model(path, compile=False)
     return model
@@ -42,7 +49,7 @@ def get_crop_recommendation(item):
 def get_fertilizer_recommendation(num_features, cat_features):
     scaler_path = os.path.join(BASE_DIR, 'models', 'ML_models', 'fertilizer_scaler.pkl')
     model_path = os.path.join(BASE_DIR, 'models', 'ML_models', 'fertilizer_model.pkl')
-    
+
     with open(scaler_path, 'rb') as f:
         fertilizer_scaler = pickle.load(f)
     with open(model_path, 'rb') as f:
