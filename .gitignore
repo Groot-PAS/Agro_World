@@ -1,5 +1,26 @@
+# Byte-compiled / optimized / DLL files
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+
+# Virtual environments
 venv/
+.venv/
+env/
+ENV/
 .env
-models/DL_models/*.h5 
+
+# Uploaded leaf images (keep directory via .gitkeep)
+uploads/*
+!uploads/.gitkeep
+Agro_World/uploads/*
+!Agro_World/uploads/.gitkeep
+
+# Rice model exceeds GitHub 100MB limit
+models/DL_models/rice_model.h5
+Agro_World/models/DL_models/rice_model.h5
+
+# OS generated
+.DS_Store
+Thumbs.db
+*.swp

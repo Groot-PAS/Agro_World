@@ -9,17 +9,38 @@
   <br>
   
   <div class="container pt-5">
-  	<h3 style="margin: auto;width: 80%; text-align: center; margin-top: 20px;  text-transform: uppercase">Results Of Prediction</h3>
-  <div style="width: 90%; margin: auto; text-align: center">
-      <img src="{{ url_for('send_file', filename=image_file_name)}}" style ="max-width: 500px; max-height: 450px; margin-top: 30px; margin-bottom: 10px">
-      <p style="font-style: italic">{{ image_file_name }}</p>
+    <h3 style="margin: auto; width: 80%; text-align: center; margin-top: 20px; text-transform: uppercase">Results Of Prediction</h3>
+    <div style="width: 90%; margin: auto; text-align: center">
+      <img src="{{ url_for('send_file', filename=image_file_name)}}" style="max-width: 500px; max-height: 450px; margin-top: 30px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+      <p style="font-style: italic; color: #777;">{{ image_file_name }}</p>
 
-      <h3 style="margin-top: 40px"><b>Prediction: <span style="color: green">{{ result }}</span></b></h3>
+      <h3 style="margin-top: 30px">
+        <b>Predicted Condition: <span style="color: {% if 'healthy' in result|lower %}green{% else %}#d9534f{% endif %}">{{ result }}</span></b>
+      </h3>
+
+      <h5 style="margin-top: 10px; color: #555;">
+        Prediction Confidence: <b>{{ confidence }}%</b>
+      </h5>
+
+      {% if not is_confident %}
+      <div class="alert alert-warning text-start mx-auto mt-4" style="max-width: 650px;" role="alert">
+        <h5 class="alert-heading">⚠️ Low Confidence Warning</h5>
+        <p class="mb-1">The model confidence is below the reliable threshold (50%). This usually happens when:</p>
+        <ul class="mb-0">
+          <li>The uploaded photo is not a leaf from a <b>{{ crop }}</b> plant.</li>
+          <li>The image contains a non-plant object (e.g. shoe, background clutter).</li>
+          <li>The lighting is too poor or the photo is blurry.</li>
+        </ul>
+      </div>
+      {% endif %}
+
       <br>
       <br>
       <div class="prediction text-center">
-        <a href="/" class="smoothScroll btn btn-success wow fadeInDown" data-wow-delay="2000">Back Home</a>
+        <a href="/crop-disease" class="btn btn-outline-success me-2">Test Another Image</a>
+        <a href="/" class="btn btn-success">Back Home</a>
       </div>
+    </div>
   </div>
   <br>
   <br>

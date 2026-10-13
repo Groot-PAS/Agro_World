@@ -3,83 +3,79 @@
 
 <div class="container pt-5">
   <h1 class="text-center" style="color: #8CE17D;">Crop Recommendation</h1>
-  <p class="text-center pt-3">Using your soil composition data and weather condtions we can predict the best type of
-    crop to sow</p>
+  <p class="text-center pt-3">Using your soil composition data and weather conditions, we can predict the best type of crop to sow.</p>
 </div>
 <br>
 <br>
 <div class="container">
 
-
-  <div class="col-md-4 col-md-offset-4" style="float: right; margin-top: 5%; margin-right: 10%;margin-bottom: 5%;">
-    <img src="./static/images/upload-img.jpg" width="500" height="333">
+  <div class="col-md-4 col-md-offset-4" style="float: right; margin-top: 5%; margin-right: 10%; margin-bottom: 5%;">
+    <img src="{{ url_for('static', filename='images/upload-img.jpg') }}" width="500" height="333" style="border-radius: 8px;">
   </div>
 
   <form action="/crop-recommendation" method="POST" style="margin-top: 5%">
-    <div class="col-md-4 col-md-offset-4">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="alert alert-warning col-md-4 col-md-offset-4" role="alert">
+          {% for message in messages %}
+            <div>{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
 
-      <label for="N">Amount of Azote :</label>
-      <input class="form-control" type="number" min="0" required="required" name="N" ,
-        placeholder="enter amount of azote">
-
+    <div class="col-md-4 col-md-offset-4 mb-3">
+      <label for="N">Nitrogen (N) ratio in soil :</label>
+      <input class="form-control" type="number" step="any" min="0" required="required" id="N" name="N"
+        placeholder="Enter Nitrogen ratio (e.g. 90)">
     </div>
-    <div class="col-md-4 col-md-offset-4">
 
-      <label for="P">Amount of Phosphorous :</label>
-      <input class="form-control" type="number" min="0" id="P" name="P" required="required"
-        placeholder="enter amount of phosphore">
-
+    <div class="col-md-4 col-md-offset-4 mb-3">
+      <label for="P">Phosphorus (P) ratio in soil :</label>
+      <input class="form-control" type="number" step="any" min="0" id="P" name="P" required="required"
+        placeholder="Enter Phosphorus ratio (e.g. 42)">
     </div>
-    <div class="col-md-4 col-md-offset-4">
 
-      <label for="K">Amount of Potassium :</label>
-      <input class="form-control" type="number" min="0" id="K" name="K" required="required"
-        placeholder="enter amount of potassium">
-
+    <div class="col-md-4 col-md-offset-4 mb-3">
+      <label for="K">Potassium (K) ratio in soil :</label>
+      <input class="form-control" type="number" step="any" min="0" id="K" name="K" required="required"
+        placeholder="Enter Potassium ratio (e.g. 43)">
     </div>
-    <div class="col-md-4 col-md-offset-4">
 
-      <label for="temperature">Soil Temperature :</label>
+    <div class="col-md-4 col-md-offset-4 mb-3">
+      <label for="temperature">Soil Temperature (°C) :</label>
       <input class="form-control" type="number" min="0" step="any" id="temperature" name="temperature"
-        required="required" placeholder="Enter soil temperature">
-
+        required="required" placeholder="Enter temperature in °C (e.g. 20.8)">
     </div>
-    <div class="col-md-4 col-md-offset-4">
 
-      <label for="humidity">Soil Humidity :</label>
-      <input class="form-control" type="number" min="0" step="any" id="humidity" name="humidity" required="required"
-        placeholder="enter soil humidity level">
-
+    <div class="col-md-4 col-md-offset-4 mb-3">
+      <label for="humidity">Relative Humidity (%) :</label>
+      <input class="form-control" type="number" min="0" max="100" step="any" id="humidity" name="humidity" required="required"
+        placeholder="Enter humidity percentage (e.g. 82.0)">
     </div>
-    <div class="col-md-4 col-md-offset-4">
 
-      <label for="phosphore">Soil Ph :</label>
-      <input class="form-control" type="number" min="0" step="any" id="phosphore" name="phosphore" required="required"
-        placeholder="enter soil ph">
-
+    <div class="col-md-4 col-md-offset-4 mb-3">
+      <label for="ph">Soil pH :</label>
+      <input class="form-control" type="number" min="0" max="14" step="any" id="ph" name="ph" required="required"
+        placeholder="Enter soil pH (e.g. 6.5)">
     </div>
-    <div class="col-md-4 col-md-offset-4">
 
-      <label for="rainfall">Amount of RainFall :</label>
+    <div class="col-md-4 col-md-offset-4 mb-3">
+      <label for="rainfall">Rainfall (mm) :</label>
       <input class="form-control" type="number" min="0" step="any" id="rainfall" name="rainfall" required="required"
-        placeholder="enter amout of rain recieved">
-
+        placeholder="Enter rainfall in mm (e.g. 202.9)">
     </div>
     <br>
 
-
-    <div class="text-center" style="padding-top: 5%">
-      <button type="submit" class="btn btn-success" value="submit">predict</button>
+    <div class="text-center" style="padding-top: 2%">
+      <button type="submit" class="btn btn-success px-5 py-2" value="submit">Predict Crop</button>
     </div>
     <br>
     <br>
 
   </form>
 
-
-
 </div>
-
 
 <br>
 <br>
